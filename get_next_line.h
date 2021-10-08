@@ -6,13 +6,12 @@
 /*   By: vfranco- <vfranco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/30 19:51:56 by vfranco-          #+#    #+#             */
-/*   Updated: 2021/09/29 10:42:56 by vfranco-         ###   ########.fr       */
+/*   Updated: 2021/10/08 11:08:28 by vfranco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-#ifndef GET_NEXT_LINE_BONUS_H
-#define GET_NEXT_LINE_BONUS_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>

@@ -6,13 +6,13 @@
 /*   By: vfranco- <vfranco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/21 15:28:27 by vfranco-          #+#    #+#             */
-/*   Updated: 2021/10/08 00:15:15 by vfranco-         ###   ########.fr       */
+/*   Updated: 2021/10/08 11:10:06 by vfranco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 1
+# define BUFFER_SIZE 10
 #endif
 #define INT_MAX 2147483647
 
@@ -36,16 +36,18 @@ char	*ft_lststrjoin(t_list *lst, char *buffer)
 	int		size;
 	int		count;
 	char	*line;
+	char	*after_n;
 	t_list	*p;
 
 	size = ft_lst_new_addback_size(&lst, "", 1);
+	after_n = ft_strchr(buffer, '\n');
 	if (size == 0)
 	{
-		line = ft_strndup(buffer, ft_strchr(buffer, '\n') - buffer + 1);
+		line = ft_strndup(buffer, after_n - buffer + 1);
 		return (line);
 	}
-	if (ft_strchr(buffer, '\n'))
-		count = ft_strchr(buffer, '\n') - buffer + ft_strlen((char *)(lst->s)); // if buffer has no \n this line fails.
+	if (after_n)
+		count = after_n - buffer + ft_strlen((char *)(lst->s));
 	else
 		count = ft_strlen((char *)(lst->s)) + ft_strlen(buffer);
 	line = malloc(sizeof(char) * ((size - 1) * BUFFER_SIZE + count + 2));
@@ -59,7 +61,7 @@ char	*ft_lststrjoin(t_list *lst, char *buffer)
 		count = count + ft_strlen((char *)(p->s));
 		p = p->next;
 	}
-	ft_strncat(line + count, buffer, ft_strchr(buffer, '\n') - buffer + 1);
+	ft_strncat(line + count, buffer, after_n - buffer + 1);
 	return (line);
 }
 
@@ -90,7 +92,7 @@ char	*ft_read_more(t_list **lst, int fd)
 			return (NULL);
 		}
 		buffer[num_read] = '\0';
-		if(ft_strchr(buffer, '\n') || num_read != BUFFER_SIZE)
+		if (ft_strchr(buffer, '\n') || num_read != BUFFER_SIZE)
 		{
 			line = ft_lststrjoin(*lst, buffer);
 			if (ft_strchr(buffer, '\n'))
@@ -100,7 +102,10 @@ char	*ft_read_more(t_list **lst, int fd)
 			if (!buffer_aux)
 				return (NULL);
 			ft_lstclear(lst, &free);
-			ft_lst_new_addback_size(lst, buffer_aux, 0);
+			if (buffer_aux[0] != '\0')
+				ft_lst_new_addback_size(lst, buffer_aux, 0);
+			else
+				free(buffer_aux);
 		}
 		else
 			ft_lst_new_addback_size(lst, buffer, 0);
@@ -126,10 +131,16 @@ char	*get_next_line(int fd)
 		if (ft_strlen(buffer))
 		{
 			ft_lstclear(&lst, &free);
-			ft_lst_new_addback_size(&lst, buffer, 0);
+			if (buffer[0] != '\0')
+				ft_lst_new_addback_size(&lst, buffer, 0);
+			else
+				free(buffer);
 		}
 		else
+		{
+			free(buffer);
 			ft_lstclear(&lst, &free);
+		}
 	}
 	else
 		line = ft_read_more(&lst, fd);
