@@ -6,7 +6,7 @@
 /*   By: vfranco- <vfranco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/23 10:45:22 by vfranco-          #+#    #+#             */
-/*   Updated: 2021/09/29 10:43:25 by vfranco-         ###   ########.fr       */
+/*   Updated: 2021/10/08 00:16:49 by vfranco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ size_t	ft_strlen(const char *str)
 
 char	*ft_strchr(const char *s, int c)
 {
+	if(!s)
+		return(NULL);
 	c = (unsigned char) c;
 	while (*s != c && *s != '\0')
 		s++;

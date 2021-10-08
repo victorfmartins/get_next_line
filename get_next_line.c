@@ -6,12 +6,14 @@
 /*   By: vfranco- <vfranco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/21 15:28:27 by vfranco-          #+#    #+#             */
-/*   Updated: 2021/10/07 22:10:30 by vfranco-         ###   ########.fr       */
+/*   Updated: 2021/10/08 00:15:15 by vfranco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#define BUFFER_SIZE 50
+#ifndef BUFFER_SIZE
+#define BUFFER_SIZE 1
+#endif
 #define INT_MAX 2147483647
 
 void	ft_strncat(char *dest, char *src, unsigned int n)
@@ -19,6 +21,8 @@ void	ft_strncat(char *dest, char *src, unsigned int n)
 	unsigned int	idx;
 
 	idx = 0;
+	if (!src)
+		return ;
 	while (src[idx] && idx < n)
 	{
 		dest[idx] = src[idx];
@@ -77,12 +81,16 @@ char	*ft_read_more(t_list **lst, int fd)
 		if (num_read <= 0)
 		{
 			free(buffer);
+			if (ft_lst_new_addback_size(lst, NULL, 1) != 0)
+			{
+				line = ft_lststrjoin(*lst, NULL);
+				ft_lstclear(lst, &free);
+				return (line);
+			}
 			return (NULL);
 		}
 		buffer[num_read] = '\0';
-		if (!ft_strchr(buffer, '\n') && num_read == BUFFER_SIZE)
-			ft_lst_new_addback_size(lst, buffer, 0);
-		else
+		if(ft_strchr(buffer, '\n') || num_read != BUFFER_SIZE)
 		{
 			line = ft_lststrjoin(*lst, buffer);
 			if (ft_strchr(buffer, '\n'))
@@ -94,6 +102,8 @@ char	*ft_read_more(t_list **lst, int fd)
 			ft_lstclear(lst, &free);
 			ft_lst_new_addback_size(lst, buffer_aux, 0);
 		}
+		else
+			ft_lst_new_addback_size(lst, buffer, 0);
 	}
 	free(buffer);
 	return (line);
@@ -126,22 +136,22 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int	main()
-{
-	int		fd;
-	char	*line;
+// int	main()
+// {
+// 	int		fd;
+// 	char	*line;
 
-	fd = open("song.txt", O_RDONLY);
-	line = "";
-	while (line) // chances muito baixas (ou nula) de free em line resul em nulo
-	{
-		line = get_next_line(fd);
-		if (line == NULL)
-			break ;
-		write(1, line, ft_strlen(line));
-		free(line);
-	}
-}
+// 	fd = open("song.txt", O_RDONLY);
+// 	line = "";
+// 	while (line) // chances muito baixas (ou nula) de free em line resul em nulo
+// 	{
+// 		line = get_next_line(fd);
+// 		if (line == NULL)
+// 			break ;
+// 		write(1, line, ft_strlen(line));
+// 		free(line);
+// 	}
+// }
 
 // Parameters File descriptor to read from
 // Return value Read line: correct behavior
