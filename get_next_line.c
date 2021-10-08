@@ -6,7 +6,7 @@
 /*   By: vfranco- <vfranco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/21 15:28:27 by vfranco-          #+#    #+#             */
-/*   Updated: 2021/09/29 14:29:45 by vfranco-         ###   ########.fr       */
+/*   Updated: 2021/10/07 22:10:30 by vfranco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,10 @@ char	*ft_lststrjoin(t_list *lst, char *buffer)
 		line = ft_strndup(buffer, ft_strchr(buffer, '\n') - buffer + 1);
 		return (line);
 	}
-	count = ft_strchr(buffer, '\n') - buffer + ft_strlen((char *)(lst->s)); // if buffer has no \n this line fails.
+	if (ft_strchr(buffer, '\n'))
+		count = ft_strchr(buffer, '\n') - buffer + ft_strlen((char *)(lst->s)); // if buffer has no \n this line fails.
+	else
+		count = ft_strlen((char *)(lst->s)) + ft_strlen(buffer);
 	line = malloc(sizeof(char) * ((size - 1) * BUFFER_SIZE + count + 2));
 	if (!line)
 		return (NULL);
@@ -64,7 +67,8 @@ char	*ft_read_more(t_list **lst, int fd)
 	char	*line;
 
 	buffer = "";
-	while (!ft_strchr(buffer, '\n'))
+	line = NULL;
+	while (!ft_strchr(buffer, '\n') && (!line || ft_strchr(line, '\n') != 0))
 	{
 		buffer = malloc(BUFFER_SIZE + 1);
 		if (!buffer)
@@ -81,7 +85,10 @@ char	*ft_read_more(t_list **lst, int fd)
 		else
 		{
 			line = ft_lststrjoin(*lst, buffer);
-			buffer_aux = ft_strndup(ft_strchr(buffer, '\n') + 1, INT_MAX);
+			if (ft_strchr(buffer, '\n'))
+				buffer_aux = ft_strndup(ft_strchr(buffer, '\n') + 1, INT_MAX);
+			else
+				buffer_aux = ft_strndup("", INT_MAX);
 			if (!buffer_aux)
 				return (NULL);
 			ft_lstclear(lst, &free);
