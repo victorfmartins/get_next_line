@@ -8,7 +8,7 @@ Get Next Line is the second individual project at [École 42](https://www.42sp.o
 **Follow the steps below**
 ```bash
 # Clone the project and access the folder
-git clone https://github.com/victorfmartins/get_next_line.git && cd GNL/
+git clone https://github.com/victorfmartins/get_next_line.git && cd get_next_line/
 
 # Create a main file
 touch main.c
