@@ -28,8 +28,7 @@ int	main(void)
 	char	*line;
 
 	fd = open("song.txt", O_RDONLY);
-	line = "";
-	while (line) // chances muito baixas (ou nula) de free em line resul em nulo
+	while (1)
 	{
 		line = get_next_line(fd);
 		if (line == NULL)
