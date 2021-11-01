@@ -5,15 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: vfranco- <vfranco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/30 11:45:09 by vfranco-          #+#    #+#             */
-/*   Updated: 2021/10/31 14:09:20 by vfranco-         ###   ########.fr       */
+/*   Created: 2021/10/31 22:18:41 by vfranco-          #+#    #+#             */
+/*   Updated: 2021/10/31 22:22:54 by vfranco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 10
-#endif
 
 static char	*read_and_join(int fd, char *backup)
 {
@@ -53,7 +50,7 @@ char	*extract_line(char **backup)
 	line = malloc(sizeof(char) * i + 2);
 	ft_strlcpy(line, *backup, i + 2);
 	aux = *backup;
-	if ((*backup)[i] != '\0' && 
+	if ((*backup)[i] != '\0' &&
 		!((*backup)[i] == '\n' && (*backup)[i + 1] == '\0' ))
 		*backup = ft_strdup((*backup) + i + 1);
 	else
@@ -64,15 +61,15 @@ char	*extract_line(char **backup)
 
 char	*get_next_line(int fd)
 {
-	static char	*backup[256];
+	static char	*backup;
 	char		*line;
 
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	backup[fd] = read_and_join(fd, backup[fd]);
-	if (!backup[fd])
+	backup = read_and_join(fd, backup);
+	if (!backup)
 		return (NULL);
-	line = extract_line(&backup[fd]);
+	line = extract_line(&backup);
 	return (line);
 }

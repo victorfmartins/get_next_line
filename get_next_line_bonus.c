@@ -1,19 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vfranco- <vfranco-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/30 11:45:09 by vfranco-          #+#    #+#             */
-/*   Updated: 2021/10/31 14:09:20 by vfranco-         ###   ########.fr       */
+/*   Created: 2021/10/31 22:18:05 by vfranco-          #+#    #+#             */
+/*   Updated: 2021/10/31 22:23:22 by vfranco-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 10
-#endif
+#include "get_next_line_bonus.h"
 
 static char	*read_and_join(int fd, char *backup)
 {
@@ -53,7 +50,7 @@ char	*extract_line(char **backup)
 	line = malloc(sizeof(char) * i + 2);
 	ft_strlcpy(line, *backup, i + 2);
 	aux = *backup;
-	if ((*backup)[i] != '\0' && 
+	if ((*backup)[i] != '\0' &&
 		!((*backup)[i] == '\n' && (*backup)[i + 1] == '\0' ))
 		*backup = ft_strdup((*backup) + i + 1);
 	else
@@ -62,9 +59,9 @@ char	*extract_line(char **backup)
 	return (line);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line_bonus(int fd)
 {
-	static char	*backup[256];
+	static char	*backup[FD_MAX];
 	char		*line;
 
 	line = NULL;
